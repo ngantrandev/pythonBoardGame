@@ -1,0 +1,26 @@
+name: Merge upstream branches
+on:
+  schedule:
+    - cron:  '*/10 * * * *'  # runs every 10 minutes
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Merge upstream
+        run: |
+          git config --global user.name 'ngantrandev'
+          git config --global user.email 'ngantrandev@users.noreply.github.com'
+
+          # Fetch the full history of the repository
+          git pull --unshallow
+
+          # Add and fetch upstream repository
+          git remote add upstream https://github.com/daylahao/pythonBoardGame.git
+          git fetch upstream
+
+          # Merge main branch from upstream
+          git checkout main
+          git merge --no-edit upstream/main
+          git push origin main
